@@ -42,6 +42,7 @@ async function read(req) {
         if (+_b.offset) opts.offset = +_b.offset;
         if (+_b.limit) opts.limit = +_b.limit;
         if (_b.userId) opts.where.userId = _b.userId;
+        if (_b.functionId) opts.where.id = _b.functionId;
         let u = await Function.findAll(opts)
         if (!u) {
             return {
