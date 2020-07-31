@@ -39,7 +39,7 @@ async function register(req) {
                 return {
                     code: 200,
                     data: {
-                        status: false,
+                        status: true,
                         message: "Registered Successfully"
                     }
                 }
@@ -47,12 +47,12 @@ async function register(req) {
         }
     }
     catch (err) {
-        console.error(e);
+        console.error(err);
         return {
             code: 400,
             data: {
                 status: false,
-                message: e.message
+                message: err.message
             }
         }
     }
