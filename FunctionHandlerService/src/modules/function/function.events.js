@@ -114,7 +114,7 @@ async function executeRead(message) {
             await Producer.send({
                 topic: `computeengine_execute_req`,
                 messages: [
-                    { key: 'data', value: JSON.stringify(res.data) }
+                    { key:  message.requestId, value: res.data.code }
                 ],
             })
         }

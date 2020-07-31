@@ -54,3 +54,38 @@ func Execute() http.Handler {
 		service.RollUpContiner(dir)
 	})
 }
+
+func ExecuteEvent(code string, key string) {
+	var _b types.Execute
+	var resp Resp
+	_b.Code = code
+	dir := uuid.New()
+	var toWatch string = fmt.Sprintf("./%s/%s/out.txt", service.ParentDir, dir.String())
+
+	//Setup directory
+	service.CreateDirectory(dir)
+
+	//Create files
+	service.CopyExecuteJs(dir)
+	service.CreateCodeJs(dir, _b.Code)
+	service.CreateScriptSh(dir, service.StartSh)
+
+	//Add Watcher for file create
+	o := observer.Observer{}
+	err := o.Watch([]string{toWatch})
+	if err != nil {
+		log.Fatal("Error: ", err)
+	}
+	defer o.Close()
+	o.AddListener(func(e interface{}) {
+		if e.(observer.WatchEvent).Op == 2 {
+			resp.status = true
+			resp.message = service.RetrieveOutTxt(dir)
+			Produce(resp.message, key)
+			//product res.message
+		}
+	})
+
+	//roll up container
+	service.RollUpContiner(dir)
+}

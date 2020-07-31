@@ -26,7 +26,7 @@ var (
 )
 
 func main() {
-	flag.StringVar(&listenAddr, "listen-addr", ":5000", "server listen address")
+	flag.StringVar(&listenAddr, "listen-addr", ":8003", "server listen address")
 	flag.Parse()
 
 	logger := log.New(os.Stdout, "http: ", log.LstdFlags)
@@ -72,7 +72,9 @@ func main() {
 		close(done)
 	}()
 	logger.Print("kafka Service")
-	service.KafkaInit()
+	// service.KafkaInit()
+	handler.KafkaInit()
+	handler.Init()
 	logger.Println("Server is ready to handle requests at", listenAddr)
 	atomic.StoreInt32(&healthy, 1)
 	if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {

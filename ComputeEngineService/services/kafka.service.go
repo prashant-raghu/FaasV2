@@ -6,8 +6,12 @@ import (
 	"os/signal"
 	"syscall"
 
+	// "../handlers"
 	"gopkg.in/confluentinc/confluent-kafka-go.v1/kafka"
 )
+
+var P *kafka.Producer
+var Topic string
 
 func KafkaInit() {
 	broker := Broker
@@ -32,6 +36,16 @@ func KafkaInit() {
 
 	err = c.SubscribeTopics(topics, nil)
 
+	topic := "computeengine_execute_res"
+	Topic = topic
+	// P, err := kafka.NewProducer(&kafka.ConfigMap{"bootstrap.servers": broker})
+	// if err != nil {
+	// 	fmt.Printf("Failed to create producer: %s\n", err)
+	// 	os.Exit(1)
+	// }
+
+	// fmt.Printf("Created Producer %v\n", P)
+
 	run := true
 
 	for run == true {
@@ -47,10 +61,16 @@ func KafkaInit() {
 
 			switch e := ev.(type) {
 			case *kafka.Message:
-				fmt.Println(e.Key)
+				fmt.Println(string(e.Key))
 				fmt.Println(*e.TopicPartition.Topic)
 				fmt.Println(string(e.Value))
 				//unmarshal the json and execute it then product the response back to kafka
+				//execute code and produce event
+				// produce(string(e.Value), string(e.Key))
+				// handler.Ex
+				if topic != "nil" {
+
+				}
 				if e.Headers != nil {
 					fmt.Printf("%% Headers: %v\n", e.Headers)
 				}
@@ -67,4 +87,29 @@ func KafkaInit() {
 
 	fmt.Printf("Closing consumer\n")
 	c.Close()
+}
+func Produce(value string, key string) {
+	deliveryChan := make(chan kafka.Event)
+	err := P.Produce(&kafka.Message{
+		TopicPartition: kafka.TopicPartition{Topic: &Topic, Partition: kafka.PartitionAny},
+		Value:          []byte(value),
+		Key:            []byte(key),
+	}, deliveryChan)
+	if err == nil {
+	}
+	e2 := <-deliveryChan
+	m := e2.(*kafka.Message)
+	if m.TopicPartition.Error != nil {
+		fmt.Printf("Delivery failed: %v\n", m.TopicPartition.Error)
+	} else {
+		fmt.Printf("Delivered message to topic %s [%d] at offset %v\n",
+			*m.TopicPartition.Topic, m.TopicPartition.Partition, m.TopicPartition.Offset)
+	}
+	// p.Close()
+	close(deliveryChan)
+}
+
+func execute(ret string, key string) string {
+	// produce(ret, key, p, "")
+	return ret
 }
