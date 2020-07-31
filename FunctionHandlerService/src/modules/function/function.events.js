@@ -25,6 +25,8 @@ async function create(message) {
     try {
         if (message.value) {
             message = JSON.parse(message.value.toString());
+            let decoded = auth.decode(message.auth);
+            message.userId = decoded;
             let req = {
                 body: message
             }
@@ -60,6 +62,8 @@ async function read(message) {
     try {
         if (message.value) {
             message = JSON.parse(message.value.toString());
+            let decoded = auth.decode(message.auth);
+            message.userId = decoded;
             let req = {
                 body: message
             }
@@ -95,10 +99,12 @@ async function remove(message) {
     try {
         if (message.value) {
             message = JSON.parse(message.value.toString());
+            let decoded = auth.decode(message.auth);
+            message.userId = decoded;
             let req = {
                 body: message
             }
-            let res = await handler.delete(req);
+            let res = await handler.remove(req);
             res.data.requestId = message.requestId;
             console.log(res); // 
             //Produce back to kafka
@@ -130,6 +136,8 @@ async function update(message) {
     try {
         if (message.value) {
             message = JSON.parse(message.value.toString());
+            let decoded = auth.decode(message.auth);
+            message.userId = decoded;
             let req = {
                 body: message,
             }
