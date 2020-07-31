@@ -18,6 +18,9 @@ Consumer.on('kafkaMessage', async (data) => {
     else if (topic == `${config.service.name}_delete_req`) {
         await remove(message)
     }
+    else if (topic == `${config.service.name}_executeRead_req`) {
+        await executeRead(message)
+    }
 });
 
 async function create(message) {
@@ -87,6 +90,43 @@ async function read(message) {
         }
         await Producer.send({
             topic: `${config.service.name}_${event}_res`,
+            messages: [
+                { key: 'data', value: JSON.stringify(res) }
+            ],
+        })
+    }
+}
+
+async function executeRead(message) {
+    let event = 'execute';
+    try {
+        if (message.value) {
+            message = JSON.parse(message.value.toString());
+            let decoded = auth.decode(message.auth);
+            message.userId = decoded;
+            let req = {
+                body: message
+            }
+            let res = await handler.read(req);
+            res.data.requestId = message.requestId;
+            console.log(res); // 
+            //Produce back to kafka
+            await Producer.send({
+                topic: `${config.service.name}_${event}_req`,
+                messages: [
+                    { key: 'data', value: JSON.stringify(res.data) }
+                ],
+            })
+        }
+        return 1;
+    }
+    catch (err) {
+        console.log(err);
+        let res = {
+            status: false
+        }
+        await Producer.send({
+            topic: `${config.service.name}_${event}_req`,
             messages: [
                 { key: 'data', value: JSON.stringify(res) }
             ],

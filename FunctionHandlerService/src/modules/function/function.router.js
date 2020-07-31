@@ -5,6 +5,7 @@ const Controller = require('./function.controller');
 
 router.post('/create',auth.authorize, Controller.create);
 router.post('/read',auth.authorize, Controller.read);
+router.post('/executeRead',auth.authorize, Controller.executeRead);
 router.post('/update',auth.authorize, Controller.update);
 router.post('/delete',auth.authorize, Controller.remove);
 router.route('/')

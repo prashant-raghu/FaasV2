@@ -35,6 +35,39 @@ async function create(req) {
     }
 };
 
+async function executeRead(req) {
+    const _b = req.body;
+    try {
+        const opts = { where: {} };
+        opts.where.id = _b.functionId;
+        let u = await Function.findOne(opts)
+        if (!u) {
+            return {
+                code: 400,
+                data: {
+                    status: false,
+                    message: 'function not found'
+                }
+            }
+        } else {
+            return {
+                code: 200,
+                data: {
+                    status: true,
+                    data: u
+                }
+            }
+        }
+    }
+    catch (err) {
+        console.log(err)
+        return {
+            code: 400,
+            data: { status: true, message: err.message }
+        }
+    }
+};
+
 async function read(req) {
     const _b = req.body;
     try {
@@ -120,5 +153,6 @@ async function update(req) {
 }
 exports.create = create;
 exports.read = read;
+exports.executeRead = executeRead;
 exports.remove = remove;
 exports.update = update;

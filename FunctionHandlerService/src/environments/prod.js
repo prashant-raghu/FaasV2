@@ -36,6 +36,6 @@ module.exports = {
     kafka:{
         brokers: ['192.168.0.109:9092'],
         clientId: 'faasv2_functionhandler',
-        events: ['create', 'read', 'update', 'delete']
+        events: ['create', 'read', 'update', 'delete', 'executeRead']
     }
 };
