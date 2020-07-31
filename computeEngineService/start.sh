@@ -1,1 +1,0 @@
-CompileDaemon -command="./computeEngine"

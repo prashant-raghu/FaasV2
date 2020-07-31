@@ -1,2 +1,0 @@
-1) go get github.com/githubnemo/CompileDaemon
-2) Grant permission to start.sh using: chmod +x ./start.sh

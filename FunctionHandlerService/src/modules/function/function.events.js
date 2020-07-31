@@ -112,7 +112,7 @@ async function executeRead(message) {
             console.log(res); // 
             //Produce back to kafka
             await Producer.send({
-                topic: `${config.service.name}_${event}_req`,
+                topic: `computeengine_execute_req`,
                 messages: [
                     { key: 'data', value: JSON.stringify(res.data) }
                 ],
