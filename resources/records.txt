@@ -1,0 +1,1 @@
+https://en.wikipedia.org/wiki/Fallacies_of_distributed_computing
