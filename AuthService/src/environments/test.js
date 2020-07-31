@@ -1,4 +1,7 @@
 module.exports = {
+    service: {
+        name: 'authservice'
+    },
     server: {
         url: 'http://127.0.0.1:8001',
         ip: '127.0.0.1',
@@ -31,6 +34,8 @@ module.exports = {
     passport: {
     },
     kafka:{
-        brokers: ['192.168.0.109:9092']
+        brokers: ['192.168.0.109:9092'],
+        clientId: 'faasv2_auth',
+        events: ['register', 'login', 'update', 'get']
     }
 };
