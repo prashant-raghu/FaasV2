@@ -140,6 +140,7 @@ async function update(message) {
                 }
             }
             let res = await handler.update(req);
+            res.data.requestId = message.requestId;
             console.log(res); // { code: 200, data: { status: true } }
             //Produce back to kafka
             await Producer.send({

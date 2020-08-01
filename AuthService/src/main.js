@@ -13,7 +13,7 @@ const passport = require('passport')
 const app = express();
 require('./services/sequelize.service').init(); // DB connected
 require('./services/passport.service')(); // Passport strategies loaded
-require('./services/kafka.service').init(); // Passport strategies loaded
+require('./services/kafka.service').init(); // kafka Consumer/Producer loaded
 mkdirp.sync(path.join(__dirname, '../', 'uploads'));
 
 // view engine setup
