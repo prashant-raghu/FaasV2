@@ -6,7 +6,7 @@ const kafka = new Kafka({
     brokers: config.kafka.brokers,
 })
 const EventEmitter = require('events');
-let group = 'faasTrialv1';
+let group = config.service.name;
 
 const producer = kafka.producer();
 const consumer = kafka.consumer({ groupId: group });
