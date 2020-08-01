@@ -107,14 +107,14 @@ async function executeRead(message) {
             let req = {
                 body: message
             }
-            let res = await handler.read(req);
+            let res = await handler.executeRead(req);
             res.data.requestId = message.requestId;
-            console.log(res); // 
+            console.log(res.data, res.data.data); // 
             //Produce back to kafka
             await Producer.send({
                 topic: `computeengine_execute_req`,
                 messages: [
-                    { key:  message.requestId, value: res.data.code }
+                    { key:  message.requestId, value: res.data.data.code }
                 ],
             })
         }
@@ -126,7 +126,7 @@ async function executeRead(message) {
             status: false
         }
         await Producer.send({
-            topic: `${config.service.name}_${event}_req`,
+            topic: `computeengine_execute_res`,
             messages: [
                 { key: 'data', value: JSON.stringify(res) }
             ],
@@ -182,6 +182,7 @@ async function update(message) {
                 body: message,
             }
             let res = await handler.update(req);
+            res.data.requestId = message.requestId;
             console.log(res); // { code: 200, data: { status: true } }
             //Produce back to kafka
             await Producer.send({
