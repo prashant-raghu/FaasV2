@@ -74,7 +74,7 @@ func main() {
 	logger.Print("kafka Service")
 	// service.KafkaInit()
 	handler.KafkaInit()
-	handler.Init()
+	// handler.Init()
 	logger.Println("Server is ready to handle requests at", listenAddr)
 	atomic.StoreInt32(&healthy, 1)
 	if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {

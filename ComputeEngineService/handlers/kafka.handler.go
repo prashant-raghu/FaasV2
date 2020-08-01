@@ -16,6 +16,7 @@ var err error
 var Topic string
 
 func KafkaInit() {
+	fmt.Println("case0")
 	broker := service.Broker
 	group := service.GroupId
 	topics := []string{"computeengine_execute_req"}
@@ -49,7 +50,7 @@ func KafkaInit() {
 	// fmt.Printf("Created Producer %v\n", P)
 
 	run := true
-
+	Init()
 	for run == true {
 		select {
 		case sig := <-sigchan:
@@ -85,13 +86,14 @@ func KafkaInit() {
 			}
 		}
 	}
-
 	fmt.Printf("Closing consumer\n")
 	c.Close()
 }
 func Init() {
+	fmt.Println("case1")
 	fmt.Println(P)
 	P, err = kafka.NewProducer(&kafka.ConfigMap{"bootstrap.servers": service.Broker})
+	fmt.Println("case2")
 	fmt.Println(P)
 	if err != nil {
 		fmt.Printf("Failed to create producer: %s\n", err)
@@ -102,11 +104,15 @@ func Init() {
 }
 func Produce(value string, key string) {
 	topicc := "computeengine_execute_res"
+	// P, err = kafka.NewProducer(&kafka.ConfigMap{"bootstrap.servers": service.Broker})
+
 	msg := &kafka.Message{
 		TopicPartition: kafka.TopicPartition{Topic: &topicc, Partition: kafka.PartitionAny},
 		Value:          []byte(value),
 		Key:            []byte(key),
 	}
+	fmt.Println("case3")
+	// P.AbortTransaction
 	fmt.Println(P)
 	err = P.Produce(msg, deliveryChan)
 	if err != nil {
