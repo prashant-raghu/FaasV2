@@ -6,5 +6,5 @@ const (
 	ParentDir       string = "mountPoint"
 
 	Broker  string = "192.168.0.109:9092"
-	GroupId string = "faasTrialv1"
+	GroupId string = "computeengineservice"
 )
